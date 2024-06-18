@@ -1,19 +1,63 @@
 import pandas as pd
 import numpy as np
 import os
+import pm4py
 
-input_data_folder = "../experiments/labeled_logs_csv"
-output_data_folder = "../experiments/logdata"
+input_data_folder = r"C:\Users\49170\Documents\FAU\Diehl Seminar\Daten"
+output_data_folder = r"C:\Users\49170\Documents\FAU\Diehl Seminar\results"
 
-filenames_bpic2011 = ["BPIC11.csv"]
-filenames_bpic2015 = ["BPIC15_%s.csv"%municipality for municipality in range(1,6)]
-filenames_bpic2017 = ["BPIC17.csv"]
-filenames_others = ["traffic_fines.csv", "Sepsis.csv"]
-#filenames = filenames_bpic2011 + filenames_bpic2015 + filenames_bpic2017 + filenames_others
-filenames = ["traffic_fines.csv"]
-timestamp_col = "Complete Timestamp"
-columns_to_remove = ["label"]
-case_id_col = "Case ID"
+filenames = ["combined_file.csv"]
+timestamp_col = 'insert_date'
+columns_to_remove = ["update_date"]
+case_id_col = "pcb_serial_number_str"
+
+workplace_mapping = {
+    "L1010103": "Laser(L1010103)",#
+    "L2020101": "Testing(L2020101)",
+    "L2020102": "Repair(L2020102)",
+    "L2030101": "Assembly(L2030101)",
+    "L2031101": "Assembly(L2031101)",
+    "L2032101": "Assembly(L2032101)",
+    "L2033101": "Assembly(L2033101)",
+    "L2040101": "Soldering(L2040101)",
+    "L2040111": "Soldering(L2040111)",
+    "L2050101": "Inspection(L2050101)",
+    "L2050102": "Repair(L2050102)",
+    "L2060101": "Testing(L2060101)",
+    "L2060102": "Repair(L2060102)",
+    "L2080101": "Cutting(L2080101)",
+    "L2080102": "Rebook(L2080102)",
+    "L2080111": "Burn-in(L2080111)",
+    "L2090101": "L2090101",
+    "L3010101": "Assembly(L3010101)",
+    "L3025101": "Assembly(L3025101)",
+    "L3030101": "Assembly(L3030101)",
+    "L3040101": "Inspection(L3040101)",
+    "L3050101": "Assembly(L3050101)",
+    "L3060101": "Scan(L3060101)",
+    "L3070101": "Soldering Flux(L3070101)",
+    "L3080100": "Soldering Heating(L3080100)",
+    "L3080101": "Soldering Heating(L3080101)",
+    "L3080102": "Soldering(L3080102)",
+    "L3090101": "Inspection(L3090101)",
+    "L3095101": "Assembly(L3095101)",
+    "L3090102": "Repair(L3090102)",
+    "L3040102": "Repair(L3040102)",
+    "L3100101": "Testing(L3100101)",
+    "L3100102": "Repair(L3100102)",
+    "L3110101": "Potting(L3110101)",
+    "L3120101": "Potting(L3120101)",
+    "L3130101": "OvenIN(L3130101)",
+    "L3140101": "OvenOUT(L3140101)",
+    "L3150101": "Testing(L3150101)",
+    "L3150102": "Repair(L3150102)",
+    "L3160101": "Packing(L3160101)",
+    "L3170101": "Packing(L3170101)",#
+    'Unknown': 'Unknown'
+}
+
+#filter ganze cases (erste und letzte aktivität und alle cases die result state 2 habe)
+#unknown untersuchen welcher zeitraum
 
 def add_remtime_column(group):
     group = group.sort_values(timestamp_col, ascending=False)
@@ -32,9 +76,27 @@ def add_remtime_column(group):
 
 for filename in filenames:
     print(filename)
-    data = pd.read_csv(os.path.join(input_data_folder, filename), sep=";")
-    #data = data.drop([columns_to_remove], axis=1)
+    data = pd.read_csv(os.path.join(input_data_folder, filename), sep=",")
+    data = data.drop(columns_to_remove, axis=1)
     data[timestamp_col] = pd.to_datetime(data[timestamp_col])
+    
+    data['workplace_number'] = data['workplace_number'].fillna('Unknown')
+    data['workplace_number'] = data['workplace_number'].map(workplace_mapping)
+    data.dropna(subset=['workplace_number'], inplace=True)
+    
+    cases_with_state_2 = data[data['result_state'] == 2][case_id_col].unique()
+    
+    grouped = data.groupby(case_id_col)
+    cases_begin_with_laser = grouped.first()
+    cases_end_with_packing = grouped.last()
+    
+    laser_cases = cases_begin_with_laser[cases_begin_with_laser['workplace_number'] == 'Laser(L1010103)'].index
+    packing_cases = cases_end_with_packing[cases_end_with_packing['workplace_number'].isin(['Packing(L3160101)', 'Packing(L3170101)'])].index
+    
+    laser_and_packing_cases = np.intersect1d(laser_cases, packing_cases)
+    relevant_cases = np.unique(np.concatenate((cases_with_state_2, laser_and_packing_cases)))
+    data = data[data[case_id_col].isin(relevant_cases)]
+    
     data = data.groupby(case_id_col).apply(add_remtime_column)
-    data.to_csv(os.path.join(output_data_folder, filename), sep=";", index=False)
+    data.to_csv(os.path.join(output_data_folder, filename), sep=",", index=False)
 

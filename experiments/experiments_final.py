@@ -14,12 +14,12 @@ import BucketFactory
 import ClassifierFactory
 from DatasetManager import DatasetManager
 
-dataset_ref = argv[1]
-bucket_method = argv[2]
-cls_encoding = argv[3]
-cls_method = argv[4]
+dataset_ref = "diehl"
+bucket_method = "single"
+cls_encoding = "agg"
+cls_method = "rf"
 optimal_params_filename = "training_params.pkl"
-results_dir = "../results/"
+results_dir = r"C:\Users\49170\Documents\FAU\Diehl Seminar\results\experiments.csv"
 
 if bucket_method == "state":
     bucket_encoding = "last"

@@ -43,10 +43,7 @@ with open(os.path.join(home_dir, optimal_params_filename), "rb") as fin:
     best_params = pickle.load(fin)
 
 dataset_ref_to_datasets = {
-    "bpic2011": ["bpic2011"],
-    "bpic2015": ["bpic2015%s"%municipality for municipality in range(1,6)],
-    "insurance": ["insurance_activity", "insurance_followup"],
-    "bpic2017": ["bpic2017"]
+    "diehl":["diehl"]
 }
 
 encoding_dict = {
@@ -81,6 +78,8 @@ with open(outfile, 'w') as fout:
         
         # split data into train and test
         train, test = dataset_manager.split_data(data, train_ratio)
+        
+        """"
         
         # consider prefix lengths until 90% of positive cases have finished
         min_prefix_length = 1
@@ -200,3 +199,4 @@ with open(outfile, 'w') as fout:
             #fout.write("%s;%s;%s;%s;%s;%s\n"%(dataset_name, method_name, cls_method, nr_events, "fscore", fscore))
             
         print("\n")
+"""

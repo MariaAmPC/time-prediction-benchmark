@@ -2,13 +2,13 @@ import pandas as pd
 import numpy as np
 import os
 
-input_data_folder = "../labeled_logs_csv"
-output_data_folder = "../logdata"
-filenames = ["Sepsis.csv"]
+input_data_folder = r"C:\Users\49170\Documents\FAU\Diehl Seminar\Daten"
+output_data_folder = r"C:\Users\49170\Documents\FAU\Diehl Seminar\results\logdata"
+filenames = ["combined_file"]
 
-case_id_col = "Case ID"
-activity_col = "Activity"
-timestamp_col = "Complete Timestamp"
+case_id_col = "pcb_serial_number_str"
+activity_col = "workplace_number"
+timestamp_col = "insert_date"
 label_col = "label"
 pos_label = "deviant"
 neg_label = "regular"
@@ -16,22 +16,16 @@ neg_label = "regular"
 category_freq_threshold = 10
 
 # features for classifier
-dynamic_cat_cols = ["Activity", 'Diagnose', 'org:group'] # i.e. event attributes
-static_cat_cols = ['DiagnosticArtAstrup', 'DiagnosticBlood', 'DiagnosticECG',
-       'DiagnosticIC', 'DiagnosticLacticAcid', 'DiagnosticLiquor',
-       'DiagnosticOther', 'DiagnosticSputum', 'DiagnosticUrinaryCulture',
-       'DiagnosticUrinarySediment', 'DiagnosticXthorax', 'DisfuncOrg',
-       'Hypotensie', 'Hypoxie', 'InfectionSuspected', 'Infusion', 'Oligurie',
-       'SIRSCritHeartRate', 'SIRSCritLeucos', 'SIRSCritTachypnea',
-       'SIRSCritTemperature', 'SIRSCriteria2OrMore'] # i.e. case attributes that are known from the start
-dynamic_num_cols = ['CRP', 'LacticAcid', 'Leucocytes']
-static_num_cols = ['Age']
+dynamic_cat_cols = ["workplace_number", 'panel_pos', 'article_number','result_state',''] # i.e. event attributes
+static_cat_cols = [] # i.e. case attributes that are known from the start
+dynamic_num_cols = []
+static_num_cols = []
 
 label_col = "label"
 pos_label = "deviant"
 neg_label = "regular"
 
-static_cols = static_cat_cols + static_num_cols + [case_id_col, label_col]
+static_cols = static_cat_cols + static_num_cols + [case_id_col]
 dynamic_cols = dynamic_cat_cols + dynamic_num_cols + [timestamp_col]
 cat_cols = dynamic_cat_cols + static_cat_cols
 
@@ -54,7 +48,7 @@ def extract_timestamp_features(group):
 
 for filename in filenames:
 
-    data = pd.read_csv(os.path.join(input_data_folder,filename), sep=";")
+    data = pd.read_csv(os.path.join(input_data_folder,filename), sep=",")
 
     # assign class labels
     grouped = data.groupby(case_id_col)
@@ -84,5 +78,5 @@ for filename in filenames:
         mask = data[col].isin(counts[counts >= category_freq_threshold].index)
         data.loc[~mask, col] = "other"
         
-    data.to_csv(os.path.join(output_data_folder,filename), sep=";", index=False)
+    data.to_csv(os.path.join(output_data_folder,filename), sep=",", index=False)
     

@@ -11,6 +11,22 @@ dynamic_num_cols = {}
 static_num_cols = {}
 filename = {}
 
+
+### Diehl ###
+dataset = "diehl"
+
+filename[dataset] = r"C:\Users\49170\Documents\FAU\Diehl Seminar\results\combined_file.csv"
+
+case_id_col[dataset] = "pcb_serial_number_str"
+activity_col[dataset] = "workplace_number"
+timestamp_col[dataset] = "insert_date"
+dynamic_cat_cols[dataset] = ["panel_pos", "result_state", "article_number"]
+static_cat_cols[dataset] = []
+dynamic_num_cols[dataset] = []
+static_num_cols[dataset] = []
+label_col[dataset]="remtime"
+
+
 #### BPIC2011 settings ####
 dataset = "bpic2011"
 

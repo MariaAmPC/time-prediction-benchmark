@@ -7,6 +7,7 @@ input_data_folder = r"C:\Users\49170\Documents\FAU\Diehl Seminar\Daten"
 output_data_folder = r"C:\Users\49170\Documents\FAU\Diehl Seminar\results"
 
 filenames = ["combined_file.csv"]
+out_name="pre_processed.csv"
 timestamp_col = 'insert_date'
 columns_to_remove = ["update_date"]
 case_id_col = "pcb_serial_number_str"
@@ -84,19 +85,12 @@ for filename in filenames:
     data['workplace_number'] = data['workplace_number'].map(workplace_mapping)
     data.dropna(subset=['workplace_number'], inplace=True)
     
-    cases_with_state_2 = data[data['result_state'] == 2][case_id_col].unique()
-    
-    grouped = data.groupby(case_id_col)
-    cases_begin_with_laser = grouped.first()
-    cases_end_with_packing = grouped.last()
-    
-    laser_cases = cases_begin_with_laser[cases_begin_with_laser['workplace_number'] == 'Laser(L1010103)'].index
-    packing_cases = cases_end_with_packing[cases_end_with_packing['workplace_number'].isin(['Packing(L3160101)', 'Packing(L3170101)'])].index
-    
-    laser_and_packing_cases = np.intersect1d(laser_cases, packing_cases)
-    relevant_cases = np.unique(np.concatenate((cases_with_state_2, laser_and_packing_cases)))
-    data = data[data[case_id_col].isin(relevant_cases)]
+    result_2 = pm4py.filter_event_attribute_values(data,level="case",case_id_key="pcb_serial_number_str",attribute_key="result_state",values=[2],retain=True)
+    data = pm4py.filter_start_activities(data,['Laser(L1010103)'],activity_key="workplace_number",case_id_key="pcb_serial_number_str",timestamp_key="insert_date")
+    data = pm4py.filter_end_activities(data,['Packing(L3160101)','Packing(L3170101)'],activity_key="workplace_number",case_id_key="pcb_serial_number_str",timestamp_key="insert_date")
+
+    data = pd.concat([data, result_2]).drop_duplicates().reset_index(drop=True)
     
     data = data.groupby(case_id_col).apply(add_remtime_column)
-    data.to_csv(os.path.join(output_data_folder, filename), sep=",", index=False)
+    data.to_csv(os.path.join(output_data_folder, out_name), sep=",", index=False)
 

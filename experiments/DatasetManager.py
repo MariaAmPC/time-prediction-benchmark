@@ -15,7 +15,7 @@ class DatasetManager:
         self.activity_col = dataset_confs.activity_col[self.dataset_name]
         self.timestamp_col = dataset_confs.timestamp_col[self.dataset_name]
         self.label_col = dataset_confs.label_col[self.dataset_name]
-        self.pos_label = dataset_confs.pos_label[self.dataset_name]
+        #self.pos_label = dataset_confs.pos_label[self.dataset_name]
 
         self.dynamic_cat_cols = dataset_confs.dynamic_cat_cols[self.dataset_name]
         self.static_cat_cols = dataset_confs.static_cat_cols[self.dataset_name]
@@ -31,7 +31,7 @@ class DatasetManager:
 
         dtypes[self.label_col] = "float"  # remaining time should be float
 
-        data = pd.read_csv(dataset_confs.filename[self.dataset_name], sep=";", dtype=dtypes)
+        data = pd.read_csv(dataset_confs.filename[self.dataset_name], sep=",", dtype=dtypes)
         data[self.timestamp_col] = pd.to_datetime(data[self.timestamp_col])
 
         return data

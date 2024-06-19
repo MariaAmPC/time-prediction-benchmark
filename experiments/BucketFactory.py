@@ -1,9 +1,9 @@
 import EncoderFactory
 
-from bucketers.ClusterBasedBucketer import ClusterBasedBucketer
-from bucketers.StateBasedBucketer import StateBasedBucketer
-from bucketers.PrefixLengthBucketer import PrefixLengthBucketer
-from bucketers.NoBucketer import NoBucketer
+from ClusterBasedBucketer import ClusterBasedBucketer
+from StateBasedBucketer import StateBasedBucketer
+from PrefixLengthBucketer import PrefixLengthBucketer
+from NoBucketer import NoBucketer
 #from bucketers.KNNBucketer import KNNBucketer
 from sklearn.cluster import KMeans
 

@@ -19,7 +19,7 @@ bucket_method = "single"
 cls_encoding = "agg"
 cls_method = "rf"
 optimal_params_filename = "training_params.pkl"
-results_dir = r"C:\Users\49170\Documents\FAU\Diehl Seminar\results\experiments.csv"
+results_dir = r"\results"
 
 if bucket_method == "state":
     bucket_encoding = "last"
@@ -39,8 +39,8 @@ home_dir = ""
 if not os.path.exists(os.path.join(home_dir, results_dir)):
     os.makedirs(os.path.join(home_dir, results_dir))
 
-with open(os.path.join(home_dir, optimal_params_filename), "rb") as fin:
-    best_params = pickle.load(fin)
+#with open(os.path.join(home_dir, optimal_params_filename), "rb") as fin:
+ #   best_params = pickle.load(fin)
 
 dataset_ref_to_datasets = {
     "diehl":["diehl"]
@@ -78,8 +78,8 @@ with open(outfile, 'w') as fout:
         
         # split data into train and test
         train, test = dataset_manager.split_data(data, train_ratio)
-        
-        """"
+
+
         
         # consider prefix lengths until 90% of positive cases have finished
         min_prefix_length = 1
@@ -92,6 +92,10 @@ with open(outfile, 'w') as fout:
 
         print(dt_train_prefixes.shape)
         print(dt_test_prefixes.shape)
+        dt_train_prefixes.to_csv(r"C:\Users\49170\Documents\FAU\Diehl Seminar\results\prefixlog.csv", sep=",", index=False)
+
+        
+        """
         
         # extract arguments
         bucketer_args = {'encoding_method':bucket_encoding, 

@@ -1,7 +1,7 @@
 from StaticTransformer import StaticTransformer
 from LastStateTransformer import LastStateTransformer
 from AggregateTransformer import AggregateTransformer
-from ndexBasedTransformer import IndexBasedTransformer
+from IndexBasedTransformer import IndexBasedTransformer
         
 def get_encoder(method, case_id_col=None, static_cat_cols=None, static_num_cols=None, dynamic_cat_cols=None, dynamic_num_cols=None, fillna=True, max_events=None):
 

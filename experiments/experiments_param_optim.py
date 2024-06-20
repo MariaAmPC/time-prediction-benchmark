@@ -15,11 +15,11 @@ import BucketFactory
 import ClassifierFactory
 from DatasetManager import DatasetManager
 
-dataset_ref = argv[1]
-bucket_method = argv[2]
-cls_encoding = argv[3]
-cls_method = argv[4]
-results_dir = "../results/CV/"
+dataset_ref = "diehl"
+bucket_method = "single"
+cls_encoding = "agg"
+cls_method = "rf"
+results_dir = r"C:\Users\49170\Documents\FAU\Diehl Seminar\results"
 
 if bucket_method == "state":
     bucket_encoding = "last"
@@ -41,10 +41,7 @@ if not os.path.exists(os.path.join(home_dir, results_dir)):
     os.makedirs(os.path.join(home_dir, results_dir))
 
 dataset_ref_to_datasets = {
-    "bpic2011": ["bpic2011"],
-    "bpic2015": ["bpic2015_%s"%municipality for municipality in range(1,6)],
-    "insurance": ["insurance_activity", "insurance_followup"],
-    "bpic2017": ["bpic2017"]
+     "diehl":["diehl"]
 }
 
 encoding_dict = {

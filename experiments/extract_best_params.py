@@ -9,17 +9,10 @@ import json
 # cv_results_dir = argv[1] # cv_results
 # outfile = argv[2] #"training_params.pkl"
 
-cv_results_dir = "../results/CV/"
+cv_results_dir = r"C:\Users\49170\Documents\FAU\Diehl Seminar\results\pre_processed.csv"
 outfile = "training_params"
 
-# read all files from directory to df
-files = glob.glob("%s/*" % cv_results_dir)
-files = [file for file in files if os.path.getsize(file) > 0]
-
-data = pd.read_csv(files[0], sep=";")
-for file in files[1:]:
-    tmp = pd.read_csv(file, sep=";")
-    data = pd.concat([data, tmp], axis=0)
+data = pd.read_csv(cv_results_dir, sep=",")
 
 # select best params according to auc only
 data = data[data.metric == "mae"]
@@ -98,8 +91,8 @@ for row in data_best[data_best.method.str.contains("prefix")][
         best_params[row[0]][row[1]][row[2]][row[3]][param] = value
 
 # write to file
-with open("%s.pkl" % outfile, "wb") as fout:
+with open(r"C:\Users\49170\Documents\FAU\Diehl Seminar\results\%s.pkl" % outfile, "wb") as fout:
     pickle.dump(best_params, fout)
 
-with open("%s.json" % outfile, "w") as fout:
+with open(r"C:\Users\49170\Documents\FAU\Diehl Seminar\results\%s.json" % outfile, "w") as fout:
     json.dump(best_params, fout, indent=3)

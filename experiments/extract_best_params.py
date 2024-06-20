@@ -9,16 +9,16 @@ import json
 # cv_results_dir = argv[1] # cv_results
 # outfile = argv[2] #"training_params.pkl"
 
-cv_results_dir = r"C:\Users\49170\Documents\FAU\Diehl Seminar\results\pre_processed.csv"
+cv_results_dir = r"C:\Users\49170\Documents\FAU\Diehl Seminar\results\cv_results_rf_single_agg_diehl.csv"
 outfile = "training_params"
 
-data = pd.read_csv(cv_results_dir, sep=",")
+data = pd.read_csv(cv_results_dir, sep=";")
 
 # select best params according to auc only
 data = data[data.metric == "mae"]
 
 # fix cases where score is unknown
-data["score"][pd.isnull(data["score"])] = 0
+data.loc[pd.isnull(data["score"]), "score"] = 0
 
 if data["score"].dtype != np.float64:
     data["score"][data["score"] == "None"] = 0

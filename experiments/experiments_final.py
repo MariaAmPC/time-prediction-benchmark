@@ -19,7 +19,7 @@ bucket_method = "single"
 cls_encoding = "agg"
 cls_method = "rf"
 optimal_params_filename = "training_params.pkl"
-results_dir = r"\results"
+results_dir = r"C:\Users\49170\Documents\FAU\Diehl Seminar\results"
 
 if bucket_method == "state":
     bucket_encoding = "last"
@@ -34,13 +34,13 @@ else:
 
 method_name = "%s_%s"%(bucket_method, cls_encoding)
 
-home_dir = ""
+home_dir = r"C:\Users\49170\Documents\FAU\Diehl Seminar\results"
 
 if not os.path.exists(os.path.join(home_dir, results_dir)):
     os.makedirs(os.path.join(home_dir, results_dir))
 
-#with open(os.path.join(home_dir, optimal_params_filename), "rb") as fin:
- #   best_params = pickle.load(fin)
+with open(os.path.join(home_dir, optimal_params_filename), "rb") as fin:
+    best_params = pickle.load(fin)
 
 dataset_ref_to_datasets = {
     "diehl":["diehl"]
@@ -95,7 +95,6 @@ with open(outfile, 'w') as fout:
         dt_train_prefixes.to_csv(r"C:\Users\49170\Documents\FAU\Diehl Seminar\results\prefixlog.csv", sep=",", index=False)
 
         
-        """
         
         # extract arguments
         bucketer_args = {'encoding_method':bucket_encoding, 
@@ -203,4 +202,3 @@ with open(outfile, 'w') as fout:
             #fout.write("%s;%s;%s;%s;%s;%s\n"%(dataset_name, method_name, cls_method, nr_events, "fscore", fscore))
             
         print("\n")
-"""

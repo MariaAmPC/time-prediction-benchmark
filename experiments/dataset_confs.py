@@ -15,7 +15,7 @@ filename = {}
 ### Diehl ###
 dataset = "diehl"
 
-filename[dataset] = r"C:\Users\49170\Documents\FAU\Diehl Seminar\results\combined_file.csv"
+filename[dataset] = r"C:\Users\49170\Documents\FAU\Diehl Seminar\results\pre_processed.csv"
 
 case_id_col[dataset] = "pcb_serial_number_str"
 activity_col[dataset] = "workplace_number"
